@@ -1,0 +1,27 @@
+Mozilla/5.0 (X11; Linux x86_64; rv:10.0.11) Gecko/20100101 conkeror/1.0pre (Debian-1.0~~pre+git120527-1)
+Mozilla/5.0 (X11; U; Linux x86_64; ru-RU) AppleWebKit/533.3 (KHTML, like Gecko) Leechcraft/0.4.55-13-g2230d9f Safari/533.3
+3.5.30729)
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2a2pre) Gecko/20090901 Ubuntu/9.10 (karmic) Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2a2pre) Gecko/20090824 Ubuntu/9.10 (karmic) Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2a2pre) Gecko/20090817 Ubuntu/9.04 (jaunty) Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux x86_64; cs-CZ; rv:1.9.2a2pre) Gecko/20090826 Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2a2pre) Gecko/20090921 Ubuntu/9.04 (jaunty) Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2a2pre) Gecko/20090906 Ubuntu/9.04 (jaunty) Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2a2pre) Gecko/20090825 Namoroka/3.6a2pre
+Mozilla/5.0 (X11; U; Linux i686; pl; rv:1.9.2a1) Gecko/20090806 Namoroka/3.6a1 (Debian GNU/Linux Sid)
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2a1) Gecko/20090806 Namoroka/3.6a1
+Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.9pre) Gecko/20100811 Ubuntu/10.04 (lucid) Namoroka/3.6.9pre GTB7.0
+Mozilla/5.0 (X11; U; Linux x86_64; it; rv:1.9.2.9pre) Gecko/20100818 Ubuntu/10.04 (lucid) Namoroka/3.6.9pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.8) Gecko/20100805 Namoroka/3.6.8
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.5pre) Gecko/20100526 Ubuntu/10.04 (lucid) Namoroka/3.6.5pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.5pre) Gecko/20100526 Namoroka/3.6.5pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.3pre) Gecko/20100324 Ubuntu/9.04 (jaunty) Namoroka/3.6.3pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.3pre) Gecko/20100316 Ubuntu/9.10 (karmic) Namoroka/3.6.3pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.3) Gecko/20100402 Namoroka/3.6.3
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.2pre) Gecko/20100310 Ubuntu/9.10 (karmic) Namoroka/3.6.2pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.2pre) Gecko/20100306 Namoroka/3.6.2pre
+Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.2pre) Gecko/20100129 Ubuntu/9.10 (karmic) Namoroka/3.6.2pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.2pre) Gecko/20100315 Ubuntu/9.10 (karmic) Namoroka/3.6.2pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.2pre) Gecko/20100310 Ubuntu/8.10 (intrepid) Namoroka/3.6.2pre
+Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.2pre) Gecko/20100129 Ubuntu/9.10 (karmic) Namoroka/3.6.2pre
+Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16
