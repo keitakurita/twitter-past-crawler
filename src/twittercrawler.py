@@ -126,7 +126,7 @@ class TwitterCrawler:
         headers = {"User-Agent": ua}
         response = requests.get(base_url,
                                 params={"q": self.query,
-                                        "vertial": "default",
+                                        "vertical": "default",
                                         "max_position": seed,
                                         "src": "typd",
                                         "include_entities": "1",
