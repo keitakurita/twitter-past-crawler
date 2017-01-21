@@ -25,7 +25,6 @@ parameters = ["time", "date", "url", "title", "description", "sitename", "retwee
 
 def parse_articles(crawler, html, output_file):
     """The function for parsing html and retrieving wanted data. Outputs to output file specified by command line"""
-
     soup = BeautifulSoup(html, "lxml")
     shared_links = soup.find_all("a", attrs={"class": ["twitter-timeline-link", "u-hidden"]})
     output = {}
@@ -121,13 +120,14 @@ class TwitterCrawler:
     def crawl(self):
         """Actual crawl function. Written as a relatively general interface in case of future updates."""
         connection_cut = False
-        seed = self.last_min_pos if self.last_min_pos is not None else ""
+        seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
         ua = random.choice(ualist)
         headers = {"User-Agent": ua}
+        # sample: https://twitter.com/i/search/timeline?vertical=news&q=%40realDonaldTrump&src=typd&include_available_features=1&include_entities=1&lang=en&max_position=TWEET-822697129130852352-822730561210826753-BD1UO2FFu9QAAAAAAAAETAAAAAcAAAASQAAAAACAAAAAAAAAAAAAAAAAgCAAhAAAAAAABAACAgCAAAAQAAAAAAAAAAAAAAAAAIAAgAIgAAAAAAAAEBAgAAAQQAAEAAAAAACAAAAAAACIAAAAAAAAgAgEAAAAAAAAAIAAAAAAIAAAgAAAAAAAAAAAQAAAAAABAAAAAAAAAAAACAAAAEAAgAAAAAAAAAAA&reset_error_state=false
         response = requests.get(base_url,
                                 params={"q": self.query,
-                                        "vertical": "default",
                                         "max_position": seed,
+                                        "vertical": "news",
                                         "src": "typd",
                                         "include_entities": "1",
                                         "include_available_features": "1",
