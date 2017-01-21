@@ -3,6 +3,7 @@ import requests
 import re
 import sys
 import random
+import os
 
 base_url = "https://twitter.com/i/search/timeline"
 if sys.platform == "linux" or sys.platform == "linux2":
@@ -25,6 +26,14 @@ parameters = ["time", "date", "url", "title", "description", "sitename", "retwee
 
 def parse_articles(crawler, html, output_file):
     """The function for parsing html and retrieving wanted data. Outputs to output file specified by command line"""
+    if crawler.depth == 1:
+        if os.path.exists(output_file):
+            pass
+        else:
+            with open(output_file, "wt") as f:
+                f.write(",".join(parameters))
+                f.write("\n")
+
     soup = BeautifulSoup(html, "lxml")
     shared_links = soup.find_all("a", attrs={"class": ["twitter-timeline-link", "u-hidden"]})
     output = {}
