@@ -30,6 +30,10 @@ def clean_text(text):
     return temp
 
 
+def has_class(element, class_):
+    return "class" in element.attrs and class_ in element.attrs["class"]
+
+
 def parse_html(crawler, html, output_file):
     parameters = []
 
@@ -62,7 +66,7 @@ def html_to_tweet_object(element):
     # find the contents of the tweet
     contents = None
     for c in tweet_container.findChildren():
-        if "class" in c.attrs and "content" in c.attrs["class"]:
+        if has_class(c, "content"):
             contents = c
             break
 
@@ -70,13 +74,36 @@ def html_to_tweet_object(element):
     if contents is not None:
         for c in contents.findChildren():
 
+            # parse the time of the tweet
+            if has_class(c, "stream-item-header"):
+                header = c
+                for small in header.findChildren():
+                    if has_class(small, "tweet-timestamp"):
+                        tweet.timestamp = small.attrs["title"]
+
             # parse the text of the tweet
-            if "class" in c.attrs and "js-tweet-text-container" in c.attrs["class"]:
+            if has_class(c, "js-tweet-text-container"):
                 text = c
                 for p in text.findChildren():
-                    if "class" in p.attrs and "tweet-text" in p.attrs["class"]:
+                    if has_class(p, "tweet-text"):
                         if hasattr(p, "contents") and not isinstance(p.contents[0], type(p)):
                             tweet.text = clean_text(p.contents[0])
+
+            # parse the stats of the tweet
+            if has_class(c, "stream-item-footer"):
+                for div in c.findChildren():
+                    if has_class(div, "ProfileTweet-actionCountList"):
+                        for span in p.findChildren():
+                            if has_class(span, "ProfileTweet-action--reply"):
+                                tweet.replies = list(span.findChildren())[0].attrs["data-tweet-stat-count"]
+
+                            if has_class(span, "ProfileTweet-action--retweet"):
+                                tweet.retweets = list(span.findChildren())[0].attrs["data-tweet-stat-count"]
+
+                            if has_class(span, "ProfileTweet-action--favorite"):
+                                tweet.favorited = list(span.findChildren())[0].attrs["data-tweet-stat-count"]
+
+    return tweet
 
 
 parameters = ["time", "date", "url", "title", "description", "sitename", "retweeted", "favorited", "verified"]
