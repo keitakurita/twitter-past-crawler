@@ -23,6 +23,13 @@ class Tweet:
         pass
 
 
+def clean_text(text):
+    temp = text
+    temp.replace("\n", " ")
+    temp.replace(",", " ")
+    return temp
+
+
 def parse_html(crawler, html, output_file):
     parameters = []
 
@@ -68,7 +75,8 @@ def html_to_tweet_object(element):
                 text = c
                 for p in text.findChildren():
                     if "class" in p.attrs and "tweet-text" in p.attrs["class"]:
-                        pass
+                        if hasattr(p, "contents") and not isinstance(p.contents[0], type(p)):
+                            tweet.text = clean_text(p.contents[0])
 
 
 parameters = ["time", "date", "url", "title", "description", "sitename", "retweeted", "favorited", "verified"]
