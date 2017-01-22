@@ -17,8 +17,58 @@ with open(uafile, "rt") as f:
     ualist = f.read().split("\n")
 
 
+class Tweet:
+
+    def __init__(self):
+        pass
+
+
 def parse_html(crawler, html, output_file):
+    parameters = []
+
+    # initialize the output_file
+    if crawler.depth == 1:
+        if os.path.exists(output_file):
+            pass
+        else:
+            with open(output_file, "wt") as f:
+                f.write(",".join(parameters))
+                f.write("\n")
+
     soup = BeautifulSoup(html, "lxml")
+    all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
+    tweets = []
+    for tweet in all_tweets:
+        tweets.append(html_to_tweet_object(tweet))
+
+
+def html_to_tweet_object(element):
+    tweet = Tweet()
+    tweet_container = list(element.children)[1]
+    attributes = tweet_container.attrs
+
+    # add attributes to Tweet object
+    tweet.tweet_id = attributes["data-tweet-id"]
+    tweet.account_name = attributes["data-name"]
+    tweet.user_id = attributes["data-user-id"]
+
+    # find the contents of the tweet
+    contents = None
+    for c in tweet_container.findChildren():
+        if "class" in c.attrs and "content" in c.attrs["class"]:
+            contents = c
+            break
+
+    # parse the contents of the tweet for relevant information
+    if contents is not None:
+        for c in contents.findChildren():
+
+            # parse the text of the tweet
+            if "class" in c.attrs and "js-tweet-text-container" in c.attrs["class"]:
+                text = c
+                for p in text.findChildren():
+                    if "class" in p.attrs and "tweet-text" in p.attrs["class"]:
+                        pass
 
 
 parameters = ["time", "date", "url", "title", "description", "sitename", "retweeted", "favorited", "verified"]
