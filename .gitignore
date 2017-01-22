@@ -3,3 +3,8 @@
 # notebook files and all related files
 .ipynb_checkpoints
 *.ipynb
+
+# misc
+log*.txt
+*.csv
+sample.html
