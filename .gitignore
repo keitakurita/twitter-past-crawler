@@ -1,1 +1,5 @@
 *.pyc
+
+# notebook files and all related files
+.ipynb_checkpoints
+*.ipynb
