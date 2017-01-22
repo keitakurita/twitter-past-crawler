@@ -48,9 +48,10 @@ def parse_html(crawler, html, output_file):
 
     soup = BeautifulSoup(html, "lxml")
     all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
-    tweets = []
+    # tweets = []
     for tweet in all_tweets:
-        tweets.append(html_to_tweet_object(tweet))
+        print(html_to_tweet_object(tweet))
+        # tweets.append(html_to_tweet_object(tweet))
 
 
 def html_to_tweet_object(element):
@@ -80,6 +81,7 @@ def html_to_tweet_object(element):
                 for small in header.findChildren():
                     if has_class(small, "tweet-timestamp"):
                         tweet.timestamp = small.attrs["title"]
+                        break
 
             # parse the text of the tweet
             if has_class(c, "js-tweet-text-container"):
@@ -88,20 +90,28 @@ def html_to_tweet_object(element):
                     if has_class(p, "tweet-text"):
                         if hasattr(p, "contents") and not isinstance(p.contents[0], type(p)):
                             tweet.text = clean_text(p.contents[0])
+                            break
 
             # parse the stats of the tweet
             if has_class(c, "stream-item-footer"):
-                for div in c.findChildren():
-                    if has_class(div, "ProfileTweet-actionCountList"):
-                        for span in p.findChildren():
-                            if has_class(span, "ProfileTweet-action--reply"):
-                                tweet.replies = list(span.findChildren())[0].attrs["data-tweet-stat-count"]
+                for span in c.findChildren():
+                    if has_class(span, "ProfileTweet-action--reply"):
+                        for grandchild in span.findChildren():
+                            if "data-tweet-stat-count" in grandchild.attrs:
+                                tweet.replies = grandchild.attrs["data-tweet-stat-count"]
+                                break
 
-                            if has_class(span, "ProfileTweet-action--retweet"):
-                                tweet.retweets = list(span.findChildren())[0].attrs["data-tweet-stat-count"]
+                    if has_class(span, "ProfileTweet-action--retweet"):
+                        for grandchild in span.findChildren():
+                            if "data-tweet-stat-count" in grandchild.attrs:
+                                tweet.retweets = grandchild.attrs["data-tweet-stat-count"]
+                                break
 
-                            if has_class(span, "ProfileTweet-action--favorite"):
-                                tweet.favorited = list(span.findChildren())[0].attrs["data-tweet-stat-count"]
+                    if has_class(span, "ProfileTweet-action--favorite"):
+                        for grandchild in span.findChildren():
+                            if "data-tweet-stat-count" in grandchild.attrs:
+                                tweet.favorites = grandchild.attrs["data-tweet-stat-count"]
+                                break
 
     return tweet
 
