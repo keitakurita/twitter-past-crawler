@@ -257,7 +257,10 @@ class TwitterCrawler:
             return False
 
     def dump(self):
-        print("last min pos: {}".format(self.last_min_pos))
+        print("""
+            last min pos: {}
+            Finish reason: {}
+            """.format(self.last_min_pos, self.end_reason))
 
     def restart(self):
         try:
