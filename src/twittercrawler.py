@@ -20,7 +20,10 @@ with open(uafile, "rt") as f:
 class Tweet:
 
     def __init__(self):
-        pass
+        self.links = []
+
+    def __str__(self):
+        return str(self.__dict__)
 
 
 def clean_text(text):
@@ -83,14 +86,19 @@ def html_to_tweet_object(element):
                         tweet.timestamp = small.attrs["title"]
                         break
 
-            # parse the text of the tweet
+            # parse the text, links of the tweet
             if has_class(c, "js-tweet-text-container"):
                 text = c
                 for p in text.findChildren():
                     if has_class(p, "tweet-text"):
                         if hasattr(p, "contents") and not isinstance(p.contents[0], type(p)):
                             tweet.text = clean_text(p.contents[0])
-                            break
+
+                    if has_class(p, "twitter-timeline-link"):
+                        if "data-expanded-url" in p.attrs:
+                            url = p.attrs["data-expanded-url"]
+                            if url not in tweet.links:
+                                tweet.links.append(url)
 
             # parse the stats of the tweet
             if has_class(c, "stream-item-footer"):
