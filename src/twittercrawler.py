@@ -17,6 +17,7 @@ with open(uafile, "rt") as f:
     ualist = f.read().split("\n")
 
 
+# tweet related class and functions
 class Tweet:
 
     def __init__(self):
@@ -26,6 +27,19 @@ class Tweet:
         return str(self.__dict__)
 
 
+def tweet_to_csv(tweet, parameters, file):
+    for (i, parameter) in enumerate(parameters):
+        if hasattr(tweet, parameter):
+            file.write(str(getattr(tweet, parameter)))
+        else:
+            file.write("Null")
+        if i < len(parameters) - 1:
+            file.write(",")
+        else:
+            file.write("\n")
+
+
+# functions for processing the html of the tweet
 def clean_text(text):
     temp = text
     temp.replace("\n", " ")
@@ -37,8 +51,8 @@ def has_class(element, class_):
     return "class" in element.attrs and class_ in element.attrs["class"]
 
 
-def parse_html(crawler, html, output_file):
-    parameters = []
+# actual sample parsers
+def parse_html(crawler, html, output_file, parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
 
     # initialize the output_file
     if crawler.depth == 1:
@@ -52,8 +66,10 @@ def parse_html(crawler, html, output_file):
     soup = BeautifulSoup(html, "lxml")
     all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
     # tweets = []
-    for tweet in all_tweets:
-        print(html_to_tweet_object(tweet))
+    file = open(output_file, "at")
+    for raw_tweet in all_tweets:
+        tweet = html_to_tweet_object(raw_tweet)
+        tweet_to_csv(tweet, parameters, file)
         # tweets.append(html_to_tweet_object(tweet))
 
 
