@@ -72,6 +72,8 @@ def parse_html(crawler, html, output_file, parameters=["tweet_id", "account_name
         tweet_to_csv(tweet, parameters, file)
         # tweets.append(html_to_tweet_object(tweet))
 
+    file.close()
+
 
 def html_to_tweet_object(element):
     tweet = Tweet()
