@@ -19,7 +19,7 @@ with open(uafile, "rt") as f:
 
 # tweet related class and functions
 class Tweet:
-
+    """A class that represents a single tweet."""
     def __init__(self):
         self.links = []
 
@@ -167,7 +167,6 @@ class TwitterCrawler:
         seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
         ua = random.choice(ualist)
         headers = {"User-Agent": ua}
-        # sample: https://twitter.com/i/search/timeline?vertical=news&q=%40realDonaldTrump&src=typd&include_available_features=1&include_entities=1&lang=en&max_position=TWEET-822697129130852352-822730561210826753-BD1UO2FFu9QAAAAAAAAETAAAAAcAAAASQAAAAACAAAAAAAAAAAAAAAAAgCAAhAAAAAAABAACAgCAAAAQAAAAAAAAAAAAAAAAAIAAgAIgAAAAAAAAEBAgAAAQQAAEAAAAAACAAAAAAACIAAAAAAAAgAgEAAAAAAAAAIAAAAAAIAAAgAAAAAAAAAAAQAAAAAABAAAAAAAAAAAACAAAAEAAgAAAAAAAAAAA&reset_error_state=false
         response = requests.get(base_url,
                                 params={"q": self.query,
                                         "max_position": seed,
