@@ -27,20 +27,9 @@ class Tweet:
         return str(self.__dict__)
 
 
-def tweet_to_csv(tweet, parameters, file):
-    for (i, parameter) in enumerate(parameters):
-        if hasattr(tweet, parameter):
-            file.write(str(getattr(tweet, parameter)))
-        else:
-            file.write("Null")
-        if i < len(parameters) - 1:
-            file.write(",")
-        else:
-            file.write("\n")
-
-
 # functions for processing the html of the tweet
 def clean_text(text):
+    """Cleans raw text so that it can be written into a csv file without causing any errors."""
     temp = text
     temp.replace("\n", " ")
     temp.replace(",", " ")
@@ -48,34 +37,23 @@ def clean_text(text):
 
 
 def has_class(element, class_):
+    """Checks if an html element (a bs4 tag element) has a certain class."""
     return "class" in element.attrs and class_ in element.attrs["class"]
 
 
 # actual sample parsers
-def parse_html(crawler, html, output_file, parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
-
-    # initialize the output_file
-    if crawler.depth == 1:
-        if os.path.exists(output_file):
-            pass
-        else:
-            with open(output_file, "wt") as f:
-                f.write(",".join(parameters))
-                f.write("\n")
-
+def parse_html(crawler, html):
+    """Sample parser. Takes the raw inner html from the twitter response and generates tweet objects to be passed to the handler"""
     soup = BeautifulSoup(html, "lxml")
     all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
-    # tweets = []
-    file = open(output_file, "at")
+
     for raw_tweet in all_tweets:
         tweet = html_to_tweet_object(raw_tweet)
-        tweet_to_csv(tweet, parameters, file)
-        # tweets.append(html_to_tweet_object(tweet))
-
-    file.close()
+        yield tweet
 
 
 def html_to_tweet_object(element):
+    """Parses the html of a single tweet from the response, and creates a tweet object."""
     tweet = Tweet()
     tweet_container = list(element.children)[1]
     attributes = tweet_container.attrs
@@ -142,107 +120,43 @@ def html_to_tweet_object(element):
     return tweet
 
 
-parameters = ["time", "date", "url", "title", "description", "sitename", "retweeted", "favorited", "verified"]
+def tweets_to_csv(crawler, tweet):
+    """Outputs the profile of the tweets to a csv file."""
 
-
-def parse_articles(crawler, html, output_file):
-    """The function for parsing html and retrieving wanted data. Outputs to output file specified by command line"""
+    # initialize the output_file
     if crawler.depth == 1:
-        if os.path.exists(output_file):
+        if os.path.exists(crawler.output_file):
             pass
         else:
-            with open(output_file, "wt") as f:
-                f.write(",".join(parameters))
+            with open(crawler.output_file, "wt") as f:
+                f.write(",".join(crawler.parameters))
                 f.write("\n")
 
-    soup = BeautifulSoup(html, "lxml")
-    shared_links = soup.find_all("a", attrs={"class": ["twitter-timeline-link", "u-hidden"]})
-    output = {}
-    for link in shared_links:
-        # get the date from the DOM element
-        # check to see if tweeted from an official account
-        # get favorited and retweeted count
-        output["verified"] = False
-        output["favorited"] = None
-        output["retweeted"] = None
-        output["date"] = "NaN"
-        output["time"] = "Nan"
-        output["title"] = None
-        output["description"] = None
-        output["sitename"] = None
+    parameters = crawler.parameters
 
-        for element in link.findParents():
-            if "class" in element.attrs and "content" in element["class"]:
-                for child in element.findChildren():
-                    # the timestamp object
-                    if "class" in child.attrs and "tweet-timestamp" in child["class"]:
-                        if "title" in child.attrs:
-                            # datetime should be in following format: 1:52 - 2016年11月19日
-                            datetime = child["title"]
-                            output["time"] = datetime.split("-")[0].strip()
-                            output["date"] = datetime.split("-")[1].strip()
-
-                    # check if verified
-                    if "class" in child.attrs and "Icon--verified" in child["class"]:
-                        output["verified"] = True
-
-                    # check for retweeted count
-                    if "class" in child.attrs and "ProfileTweet-action--retweet" in child["class"]:
-                        for grandchild in child.findChildren():
-                            if "data-tweet-stat-count" in grandchild.attrs:
-                                output["retweeted"] = grandchild["data-tweet-stat-count"]
-
-                    # check for favorited count
-                    if "class" in child.attrs and "ProfileTweet-action--favorite" in child["class"]:
-                        for grandchild in child.findChildren():
-                            if "data-tweet-stat-count" in grandchild.attrs:
-                                output["favorited"] = grandchild["data-tweet-stat-count"]
-
-        # get the url and the domain
-        if "data-expanded-url" in link.attrs:
-            url = link["data-expanded-url"]
-            output["url"] = url
-            m = re.match("https?://([^/]+)/.*", url)
-            if m is not None:
-                output["domain"] = m.group(1)
+    with open(crawler.output_file, "at") as f:
+        for (i, parameter) in enumerate(parameters):
+            if hasattr(tweet, parameter):
+                f.write(str(getattr(tweet, parameter)))
             else:
-                output["domain"] = url.split("/")[0]
-
-            # exclude twitter shares
-            if "twitter" not in output["domain"].split("."):
-                # access the page to get the title, sitename and description
-                try:
-                    r = requests.get(url)
-                    article = BeautifulSoup(r.text, "lxml")
-
-                    title = article.find("meta", attrs={"property": "og:title"})
-                    if title is not None and "content" in title.attrs:
-                        output["title"] = title["content"].replace(",", "").split("\n")[0]
-
-                    description = article.find("meta", attrs={"property": "og:description"})
-                    if description is not None and "content" in description.attrs:
-                        output["description"] = description["content"].replace(",", "").split("\n")[0]
-
-                    sitename = article.find("meta", attrs={"property": "og:site_name"})
-                    if sitename is not None and "content" in sitename.attrs:
-                        output["sitename"] = sitename["content"].replace(",", "")
-
-                    with open(output_file, "at") as f:
-                        # write in following format: time,date,url,retweeted,favorited,domain,verified,query
-                        # output = "{},{},{},{},{},{},{},{}\n".format(time, date, url, retweeted, favorited, domain, verified, args.query)
-                        f.write(",".join(str(output[a]) for a in parameters))
-                        f.write("\n")
-                except:
-                    pass
+                f.write("Null")
+            if i < len(parameters) - 1:
+                f.write(",")
+            else:
+                f.write("\n")
 
 
 class TwitterCrawler:
 
-    def __init__(self, query="hoge", max_depth=None, parser=parse_html, init_min_pos=None, output_file="output"):
+    def __init__(self, query="hoge", max_depth=None, parser=parse_html, handler=tweets_to_csv, init_min_pos=None, output_file="output",
+                 parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
         self.query = query
         self.max_depth = max_depth
-        self.parser = lambda x, y: parser(x, y, output_file)
+        self.parser = parser
+        self.handler = handler
         self.last_min_pos = init_min_pos
+        self.output_file = output_file
+        self.parameters = parameters
 
         self.depth = None
         self.end_reason = None
@@ -285,14 +199,14 @@ class TwitterCrawler:
             html = data["items_html"]
 
             # parse the html
-            self.parser(self, html)
+            for item in self.parser(self, html):
+                self.handler(self, item)
 
             # log for debugging
             with open("log" + self.query + ".txt", "at") as f:
                 f.write(min_pos + "\n")
 
             if not self.check_if_finished():
-                # &src=typd&include_available_features=1&include_entities=1&lang=ja
                 ua = random.choice(ualist)
                 headers = {"User-Agent": ua}
                 try:
