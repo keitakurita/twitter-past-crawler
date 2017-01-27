@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import re
 import sys
 import random
 import os
@@ -121,7 +120,7 @@ def html_to_tweet_object(element):
 
 
 def tweets_to_csv(crawler, tweet):
-    """Outputs the profile of the tweets to a csv file."""
+    """Receives a Tweet object, and outputs the profile of the tweets to a csv file specified by the crawler."""
 
     # initialize the output_file
     if crawler.depth == 1:
@@ -147,6 +146,7 @@ def tweets_to_csv(crawler, tweet):
 
 
 class TwitterCrawler:
+    """The crawler. Intialized according to user settings."""
 
     def __init__(self, query="hoge", max_depth=None, parser=parse_html, handler=tweets_to_csv, init_min_pos=None, output_file="output",
                  parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
@@ -162,7 +162,7 @@ class TwitterCrawler:
         self.end_reason = None
 
     def crawl(self):
-        """Actual crawl function. Written as a relatively general interface in case of future updates."""
+        """Actual crawl function. Crawls according to the initialization of the crawler."""
         connection_cut = False
         seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
         ua = random.choice(ualist)
@@ -210,13 +210,13 @@ class TwitterCrawler:
                 headers = {"User-Agent": ua}
                 try:
                     r = requests.get(base_url, params={"q": self.query,
-                                                          "vertical": "default",
-                                                          "max_position": min_pos,
-                                                          "src": "typd",
-                                                          "include_entities": "1",
-                                                          "include_available_features": "1",
-                                                          "lang": "en"
-                                                        }, headers=headers)
+                                                      "vertical": "default",
+                                                      "max_position": min_pos,
+                                                      "src": "typd",
+                                                      "include_entities": "1",
+                                                      "include_available_features": "1",
+                                                      "lang": "en"
+                                                    }, headers=headers)
                 except:
                     connection_cut = True
                     continue
@@ -235,18 +235,22 @@ class TwitterCrawler:
                 break
 
     def check_if_finished(self):
+        """Returns true if the finish conditions are met."""
         if self.max_depth is not None and self.depth >= self.max_depth:
             return True
         else:
             return False
 
     def dump(self):
+        """Print the status of the crawler to stdout."""
         print("""
             last min pos: {}
             Finish reason: {}
             """.format(self.last_min_pos, self.end_reason))
 
     def restart(self):
+        """Attempts to resume crawling from the last position that was found.
+        Requires the log file for the query to work."""
         try:
             with open("log" + self.query + ".txt", "rt") as f:
                 seed = f.read().split("\n")[-1]
