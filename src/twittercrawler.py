@@ -42,12 +42,12 @@ def has_class(element, class_):
 
 # actual sample parsers
 def parse_html(crawler, html):
-    """Sample parser. Takes the raw inner html from the twitter response and generates tweet objects to be passed to the handler"""
+    """Parses the entire html from the twitter response and generates tweet objects to be passed to the handler"""
     soup = BeautifulSoup(html, "lxml")
     all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
 
     for raw_tweet in all_tweets:
-        tweet = html_to_tweet_object(raw_tweet)
+        tweet = crawler.tweet_parser(raw_tweet)
         yield tweet
 
 
@@ -148,11 +148,12 @@ def tweets_to_csv(crawler, tweet):
 class TwitterCrawler:
     """The crawler. Intialized according to user settings."""
 
-    def __init__(self, query="hoge", max_depth=None, parser=parse_html, handler=tweets_to_csv, init_min_pos=None, output_file="output",
+    def __init__(self, query="hoge", max_depth=None, parser=parse_html, tweet_parser=html_to_tweet_object, handler=tweets_to_csv, init_min_pos=None, output_file="output",
                  parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
         self.query = query
         self.max_depth = max_depth
         self.parser = parser
+        self.tweet_parser = tweet_parser
         self.handler = handler
         self.last_min_pos = init_min_pos
         self.output_file = output_file
