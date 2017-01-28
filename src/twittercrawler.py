@@ -30,8 +30,10 @@ class Tweet:
 def clean_text(text):
     """Cleans raw text so that it can be written into a csv file without causing any errors."""
     temp = text
-    temp.replace("\n", " ")
-    temp.replace(",", " ")
+    temp = temp.replace("\n", " ")
+    temp = temp.replace("\r", " ")
+    temp = temp.replace(",", " ")
+    temp.strip()
     return temp
 
 
