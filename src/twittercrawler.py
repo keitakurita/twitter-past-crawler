@@ -18,7 +18,16 @@ with open(uafile, "rt") as f:
 
 # tweet related class and functions
 class Tweet:
-    """A class that represents a single tweet."""
+    """A class that represents a single tweet. After parsing with the default parser, the following attributes will be present:
+        - tweet_id: The unique id of the tweet itself.
+        - account_name: The name of the user tweeting this tweet.
+        - user_id: The id of the user tweeting this tweet.
+        - timestamp: The time at which this tweet was tweeted.
+        - text: The text of the tweet.
+        - links: Any external links within the tweet.
+        - replies: The number of replies to this tweet.
+        - retweets: The number of times this tweet has been retweeted.
+        - favorites: The number of favorites this tweet has recieved."""
     def __init__(self):
         self.links = []
 
@@ -151,7 +160,17 @@ def tweets_to_csv(crawler, tweet):
 
 
 class TwitterCrawler:
-    """The crawler. Intialized according to user settings."""
+    """The crawler. Intialized according to user settings. The following parameters can be specified:
+        - query: The search query to run. The query should be formed according to the Twitter Search API.
+        - max_depth: The maximum number of times this crawler will send requests to twitter.
+        - parser: A generator that takes a crawler and the entire inner HTML of the tweet stream from the response as input and yields a bs4 tag object for each tweet.
+        - tweet_parser: A function that takes a crawler and bs4 tag object for a single tweet as input and outputs a twittercrawler.Tweet object.
+        - handler: A function that takes a crawler and twittercrawler.Tweet object as input and performs some functionality using it.
+            The default handler outputs the details of the tweet to a csv file.
+        - init_min_pos: The position to start crawling at within the infinite stream of tweets.
+        - output_file: The file to output the results of the crawl to, in the case that the user uses the default handler.
+        - parameters: The parameters that will be output to the csv file in the case that the user uses the default handler.
+        """
 
     def __init__(self, query="hoge", max_depth=None, parser=parse_html, tweet_parser=html_to_tweet_object, handler=tweets_to_csv, init_min_pos=None, output_file="output",
                  parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
