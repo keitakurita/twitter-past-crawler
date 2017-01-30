@@ -138,7 +138,10 @@ def tweets_to_csv(crawler, tweet):
     with open(crawler.output_file, "at") as f:
         for (i, parameter) in enumerate(parameters):
             if hasattr(tweet, parameter):
-                f.write(str(getattr(tweet, parameter)))
+                if type(getattr(tweet, parameter)) == list:
+                    f.write(" ".join(getattr(tweet, parameter)))
+                else:
+                    f.write(str(getattr(tweet, parameter)))
             else:
                 f.write("Null")
             if i < len(parameters) - 1:
