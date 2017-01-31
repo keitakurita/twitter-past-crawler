@@ -18,16 +18,17 @@ with open(uafile, "rt") as f:
 
 # tweet related class and functions
 class Tweet:
-    """A class that represents a single tweet. After parsing with the default parser, the following attributes will be present:
-        - tweet_id: The unique id of the tweet itself.
-        - account_name: The name of the user tweeting this tweet.
-        - user_id: The id of the user tweeting this tweet.
-        - timestamp: The time at which this tweet was tweeted.
-        - text: The text of the tweet.
-        - links: Any external links within the tweet.
-        - replies: The number of replies to this tweet.
-        - retweets: The number of times this tweet has been retweeted.
-        - favorites: The number of favorites this tweet has recieved."""
+    """A class that represents a single tweet. After parsing with the default parser, the following attributes will be present.
+        Attributes:
+            tweet_id(int): The unique id of the tweet itself.
+            account_name(str): The name of the user tweeting this tweet.
+            user_id(int): The id of the user tweeting this tweet.
+            timestamp(str): The time at which this tweet was tweeted.
+            text(str): The text of the tweet.
+            links(list): Any external links within the tweet.
+            replies(int): The number of replies to this tweet.
+            retweets(int): The number of times this tweet has been retweeted.
+            favorites(int): The number of favorites this tweet has recieved."""
     def __init__(self):
         self.links = []
 
@@ -47,13 +48,24 @@ def clean_text(text):
 
 
 def has_class(element, class_):
-    """Checks if an html element (a bs4 tag element) has a certain class."""
+    """Checks if an html element (a bs4.element.Tag element) has a certain class.
+        Args:
+            element(bs4.element.Tag): The element to inspect.
+            class_(str): The class that you want to check the element for.
+        Returns:
+            bool: True if the class exists, False otherwise."""
     return "class" in element.attrs and class_ in element.attrs["class"]
 
 
 # actual sample parsers
 def parse_html(crawler, html):
-    """Parses the entire html from the twitter response and generates tweet objects to be passed to the handler"""
+    """Parses the entire html from the twitter response and generates tweet objects to be passed to the handler.
+        This is the default parser for the twitter crawler.
+        Args:
+            crawler(TwitterCrawler): The crawler that is calling this parser.
+            html(str): The entire html to parse as a string.
+        Yields:
+            Tweet: The set of tweets that are found and generated from the html response."""
     soup = BeautifulSoup(html, "lxml")
     all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
 
@@ -63,7 +75,12 @@ def parse_html(crawler, html):
 
 
 def html_to_tweet_object(element):
-    """Parses the html of a single tweet from the response, and creates a tweet object."""
+    """Parses the html of a single tweet from the response, and creates a tweet object.
+        This is the default tweet_parser for the twitter crawler.
+        Args:
+            element(bs4.element.Tag): The html of a single tweet.
+        Returns:
+            Tweet: The tweet object that represents the html of the tweet."""
     tweet = Tweet()
     tweet_container = list(element.children)[1]
     attributes = tweet_container.attrs
@@ -131,7 +148,10 @@ def html_to_tweet_object(element):
 
 
 def tweets_to_csv(crawler, tweet):
-    """Receives a Tweet object, and outputs the profile of the tweets to a csv file specified by the crawler."""
+    """Receives a Tweet object, and outputs the profile of the tweets to a csv file specified by the crawler.
+        Args:
+            crawler:(TwitterCrawler): The crawler that is calling this function.
+            tweet(Tweet): The tweet object to output the stats of."""
 
     # initialize the output_file
     if crawler.depth == 1:
@@ -160,16 +180,17 @@ def tweets_to_csv(crawler, tweet):
 
 
 class TwitterCrawler:
-    """The crawler. Intialized according to user settings. The following parameters can be specified:
-        - query: The search query to run. The query should be formed according to the Twitter Search API.
-        - max_depth: The maximum number of times this crawler will send requests to twitter.
-        - parser: A generator that takes a crawler and the entire inner HTML of the tweet stream from the response as input and yields a bs4 tag object for each tweet.
-        - tweet_parser: A function that takes a crawler and bs4 tag object for a single tweet as input and outputs a twittercrawler.Tweet object.
-        - handler: A function that takes a crawler and twittercrawler.Tweet object as input and performs some functionality using it.
-            The default handler outputs the details of the tweet to a csv file.
-        - init_min_pos: The position to start crawling at within the infinite stream of tweets.
-        - output_file: The file to output the results of the crawl to, in the case that the user uses the default handler.
-        - parameters: The parameters that will be output to the csv file in the case that the user uses the default handler.
+    """The crawler. Intialized according to user settings.
+        Attributes:
+            query(str): The search query to run. The query should be formed according to the Twitter Search API.
+            max_depth(int): The maximum number of times this crawler will send requests to twitter.
+            parser(generator): A generator that takes a crawler and the entire inner HTML of the tweet stream from the response as input and yields a bs4.element.Tag object for each tweet.
+            tweet_parser(function): A function that takes a crawler and bs4.element.Tag object for a single tweet as input and outputs a twittercrawler.Tweet object.
+            handler(function): A function that takes a crawler and twittercrawler.Tweet object as input and performs some functionality using it.
+                The default handler outputs the details of the tweet to a csv file.
+            init_min_pos(str): The position to start crawling at within the infinite stream of tweets.
+            output_file(str): The file to output the results of the crawl to, in the case that the user uses the default handler.
+            parameters(list): The parameters that will be output to the csv file in the case that the user uses the default handler.
         """
 
     def __init__(self, query="hoge", max_depth=None, parser=parse_html, tweet_parser=html_to_tweet_object, handler=tweets_to_csv, init_min_pos=None, output_file="output",
