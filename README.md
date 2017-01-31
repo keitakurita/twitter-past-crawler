@@ -12,4 +12,6 @@ The following packages are required:
 - Beautiful Soap 4
 
 ## License
-MIT
+Copyright (c) 2017 by Keita Kurita
+Released under the MIT license
+https://opensource.org/licenses/mit-license.php
