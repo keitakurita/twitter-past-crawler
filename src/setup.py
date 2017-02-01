@@ -21,7 +21,7 @@ setup(
 
     # data files
     package_data={
-        '': ['useragents_mac.txt', 'useragents_linux.txt', 'useragents_windows.txt'],
+        '': ['useragents_mac.dat', 'useragents_linux.dat', 'useragents_windows.dat'],
     },
 
     classifiers=[
