@@ -4,6 +4,7 @@ import sys
 import random
 import os
 
+# global constants that should never be modified at runtime.
 base_url = "https://twitter.com/i/search/timeline"
 if sys.platform == "linux" or sys.platform == "linux2":
     uafile = "useragentslinux.txt"
