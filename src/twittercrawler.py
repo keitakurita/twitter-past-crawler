@@ -58,7 +58,7 @@ def has_class(element, class_):
 
 
 # actual sample parsers
-def parse_html(crawler, html):
+def parse_html(tweet_parser, html):
     """Parses the entire html from the twitter response and generates tweet objects to be passed to the handler.
         This is the default parser for the twitter crawler.
         Args:
@@ -70,7 +70,7 @@ def parse_html(crawler, html):
     all_tweets = soup.find_all("li", attrs={"class": "stream-item"})
 
     for raw_tweet in all_tweets:
-        tweet = crawler.tweet_parser(raw_tweet)
+        tweet = tweet_parser(raw_tweet)
         yield tweet
 
 
@@ -197,7 +197,7 @@ class TwitterCrawler:
                  parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
         self.query = query
         self.max_depth = max_depth
-        self.parser = parser
+        self.parser = lambda x, y: parser(x.tweet_parser, y)
         self.tweet_parser = tweet_parser
         self.handler = handler
         self.last_min_pos = init_min_pos
@@ -211,17 +211,7 @@ class TwitterCrawler:
         """Actual crawl function. Crawls according to the initialization of the crawler."""
         connection_cut = False
         seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
-        ua = random.choice(ualist)
-        headers = {"User-Agent": ua}
-        response = requests.get(base_url,
-                                params={"q": self.query,
-                                        "max_position": seed,
-                                        "vertical": "news",
-                                        "src": "typd",
-                                        "include_entities": "1",
-                                        "include_available_features": "1",
-                                        "lang": "en"
-                                        }, headers=headers)
+        response = self.get_request_from_last_position(seed)
 
         self.depth = 0
 
@@ -252,17 +242,8 @@ class TwitterCrawler:
                 f.write(min_pos + "\n")
 
             if not self.check_if_finished():
-                ua = random.choice(ualist)
-                headers = {"User-Agent": ua}
                 try:
-                    r = requests.get(base_url, params={"q": self.query,
-                                                      "vertical": "default",
-                                                      "max_position": min_pos,
-                                                      "src": "typd",
-                                                      "include_entities": "1",
-                                                      "include_available_features": "1",
-                                                      "lang": "en"
-                                                    }, headers=headers)
+                    r = self.get_request_from_last_position(min_pos)
                 except:
                     connection_cut = True
                     continue
@@ -286,6 +267,18 @@ class TwitterCrawler:
             return True
         else:
             return False
+
+    def get_request_from_last_position(self, seed):
+        ua = random.choice(ualist)
+        headers = {"User-Agent": ua}
+        return requests.get(base_url, params={"q": self.query,
+                                              "vertical": "default",
+                                              "max_position": seed,
+                                              "src": "typd",
+                                              "include_entities": "1",
+                                              "include_available_features": "1",
+                                              "lang": "en"
+                                            }, headers=headers)
 
     def dump(self):
         """Print the status of the crawler to stdout."""
