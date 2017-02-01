@@ -7,11 +7,11 @@ import os
 # global constants that should never be modified at runtime.
 base_url = "https://twitter.com/i/search/timeline"
 if sys.platform == "linux" or sys.platform == "linux2":
-    uafile = "useragentslinux.txt"
+    uafile = "useragents_linux.dat"
 elif sys.platform == "darwin":
-    uafile = "useragents.txt"
+    uafile = "useragents_mac.dat"
 elif sys.platform == "win32":
-    uafile = "useragentwindows.txt"
+    uafile = "useragent_windows.dat"
 
 with open(uafile, "rt") as f:
     ualist = f.read().split("\n")
