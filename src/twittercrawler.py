@@ -63,7 +63,7 @@ def parse_html(tweet_parser, html):
     """Parses the entire html from the twitter response and generates tweet objects to be passed to the handler.
         This is the default parser for the twitter crawler.
         Args:
-            crawler(TwitterCrawler): The crawler that is calling this parser.
+            tweet_parser(function): The function to convert the html of individual tweets to tweet objects.
             html(str): The entire html to parse as a string.
         Yields:
             Tweet: The set of tweets that are found and generated from the html response."""
