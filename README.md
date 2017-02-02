@@ -11,6 +11,9 @@ The following packages are required:
 - requests
 - Beautiful Soap 4
 
+## Installation
+`$ pip install twitter_past_crawler`
+
 ## License
 Copyright (c) 2017 by Keita Kurita
 Released under the MIT license
