@@ -1,12 +1,12 @@
 import unittest
-import twittercrawler
+import twitter_past_crawler
 import os
 
 
 class CrawlerTest(unittest.TestCase):
 
     def setUp(self):
-        self.crawler = twittercrawler.TwitterCrawler(
+        self.crawler = twitter_past_crawler.TwitterCrawler(
                         query="foo",
                         output_file="foo.csv",
                         max_depth=2
@@ -23,7 +23,7 @@ class CrawlerTest(unittest.TestCase):
     def test_twitter_parser(self):
         response = self.crawler.get_request_from_last_position("hoge")
         data = response.json()
-        elements = twittercrawler.parse_html(twittercrawler.html_to_tweet_object, data["items_html"])
+        elements = twitter_past_crawler.parse_html(twitter_past_crawler.html_to_tweet_object, data["items_html"])
         for element in elements:
             if not hasattr(element, "tweet_id"):
                 return unittest.skip("{!r} doesn't have an id".format(element))
@@ -31,7 +31,7 @@ class CrawlerTest(unittest.TestCase):
     def test_parser(self):
         response = self.crawler.get_request_from_last_position("hoge")
         data = response.json()
-        elements = list(twittercrawler.parse_html(twittercrawler.html_to_tweet_object, data["items_html"]))
+        elements = list(twitter_past_crawler.parse_html(twitter_past_crawler.html_to_tweet_object, data["items_html"]))
         self.assertEqual(len(elements), 18)
 
 

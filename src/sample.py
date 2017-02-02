@@ -1,9 +1,7 @@
-import twittercrawler
+import twitter_past_crawler
 
-crawler = twittercrawler.TwitterCrawler(query="@realDonaldTrump",
-                                        max_depth=3,
-                                        parser=twittercrawler.parse_articles,
-                                        output_file="DonaldTrump.csv"
+crawler = twitter_past_crawler.TwitterCrawler(query="#haiku",
+                                        output_file="haiku.csv"
                                         )
 
 crawler.crawl()
