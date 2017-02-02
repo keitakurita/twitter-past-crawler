@@ -4,6 +4,10 @@
 .ipynb_checkpoints
 *.ipynb
 
+# distribution related files
+dist/
+twitter_past_crawler.egg-info/
+
 # misc
 log*.txt
 *.csv
