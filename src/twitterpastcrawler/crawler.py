@@ -13,6 +13,8 @@ elif sys.platform == "darwin":
 elif sys.platform == "win32":
     uafile = "useragent_windows.dat"
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+uafile = os.path.join(dir_path, uafile)
 with open(uafile, "rt") as f:
     ualist = f.read().split("\n")
 

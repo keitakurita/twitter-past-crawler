@@ -1,6 +1,6 @@
-import twitter_past_crawler
+import twitterpastcrawler
 
-crawler = twitter_past_crawler.TwitterCrawler(query="#haiku",
+crawler = twitterpastcrawler.TwitterCrawler(query="#haiku",
                                         output_file="haiku.csv"
                                         )
 

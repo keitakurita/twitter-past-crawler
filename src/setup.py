@@ -2,9 +2,9 @@ from setuptools import setup
 
 
 setup(
-    name='twitter_past_crawler',
+    name='twitterpastcrawler',
 
-    version='0.0.1',
+    version='0.0.6',
 
     description='A crawler that can crawl and accumulate past tweets without using the official API.',
 
@@ -16,8 +16,10 @@ setup(
 
     keywords='twitter crawler',
 
+    packages=["twitterpastcrawler"],
+
     # requirements
-    install_requires=['requests', 'beautifulsoup4'],
+    install_requires=['requests', 'beautifulsoup4', 'lxml'],
 
     # data files
     package_data={
@@ -32,6 +34,7 @@ setup(
         'Development Status :: 3 - Alpha',
 
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ]
 
 )
