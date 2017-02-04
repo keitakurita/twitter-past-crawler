@@ -6,7 +6,8 @@
 
 # distribution related files
 dist/
-twitter_past_crawler.egg-info/
+twitterpastcrawler.egg-info/
+build/
 
 # misc
 log*.txt
