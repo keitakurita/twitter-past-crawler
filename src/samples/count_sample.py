@@ -1,4 +1,8 @@
-import twittercrawler
+"""A sample program that uses the crawler to create a word count
+(i.e. a dictionary that takes a word as its key and returns the number of times it has appeared)
+"""
+
+import twitterpastcrawler
 from collections import defaultdict
 
 
@@ -20,7 +24,7 @@ class WordCounter:
 
 def count_words(query):
     wc = WordCounter()
-    crawler = twittercrawler.TwitterCrawler(
+    crawler = twitterpastcrawler.TwitterCrawler(
                 query=query,
                 max_depth=20,
                 handler=wc.custom_handler
