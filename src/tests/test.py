@@ -33,8 +33,13 @@ class CrawlerTest(unittest.TestCase):
     def test_parser(self):
         response = self.crawler.get_request_from_last_position("hoge")
         data = response.json()
-        elements = list(twitterpastcrawler.parse_html(twitterpastcrawler.html_to_tweet_object, data["items_html"]))
-        self.assertEqual(len(elements), 18)
+
+        def pass_parser(tweet):
+            return 1
+
+        parsed_elements = list(twitterpastcrawler.parse_html(twitterpastcrawler.html_to_tweet_object, data["items_html"]))
+        raw_elements = list(twitterpastcrawler.parse_html(pass_parser, data["items_html"]))
+        self.assertEqual(len(parsed_elements), len(raw_elements))
 
 
 if __name__ == '__main__':
