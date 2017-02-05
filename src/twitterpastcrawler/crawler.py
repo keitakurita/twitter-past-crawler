@@ -212,6 +212,7 @@ class TwitterCrawler:
 
     def crawl(self):
         """Actual crawl function. Crawls according to the initialization of the crawler."""
+        print("Commencing crawl...")
         connection_cut = False
         seed = self.last_min_pos if self.last_min_pos is not None else "hoge"
         response = self.get_request_from_last_position(seed)
