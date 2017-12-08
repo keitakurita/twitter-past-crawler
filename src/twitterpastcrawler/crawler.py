@@ -11,7 +11,7 @@ if sys.platform == "linux" or sys.platform == "linux2":
 elif sys.platform == "darwin":
     uafile = "useragents_mac.dat"
 elif sys.platform == "win32":
-    uafile = "useragent_windows.dat"
+    uafile = "useragents_windows.dat"
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 uafile = os.path.join(dir_path, uafile)
