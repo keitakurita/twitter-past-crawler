@@ -252,7 +252,7 @@ class TwitterCrawler:
 
             if not self.check_if_finished():
                 try:
-                    r = self.get_request_from_last_position(min_pos, self.lang)
+                    r = self.get_request_from_last_position(min_pos)
                 except:
                     connection_cut = True
                     continue
