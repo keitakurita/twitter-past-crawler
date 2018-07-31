@@ -196,9 +196,14 @@ class TwitterCrawler:
             parameters(list): The parameters that will be output to the csv file in the case that the user uses the default handler.
         """
 
-    def __init__(self, query="hoge", max_depth=None, parser=parse_html, tweet_parser=html_to_tweet_object, handler=tweets_to_csv, init_min_pos=None, output_file="output",
-                 parameters=["tweet_id", "account_name", "user_id", "timestamp", "text", "links", "repiles", "retweets", "favorites"]):
+    def __init__(self, query="hoge", lang='en', max_depth=None, parser=parse_html, 
+                    tweet_parser=html_to_tweet_object, handler=tweets_to_csv, 
+                    init_min_pos=None, output_file="output",
+                    parameters=["tweet_id", "account_name", "user_id", 
+                                "timestamp", "text", "links", "repiles",
+                                 "retweets", "favorites"]):
         self.query = query
+        self.lang = lang
         self.max_depth = max_depth
         self.parser = lambda x, y: parser(x.tweet_parser, y)
         self.tweet_parser = tweet_parser
@@ -281,7 +286,7 @@ class TwitterCrawler:
                                               "src": "typd",
                                               "include_entities": "1",
                                               "include_available_features": "1",
-                                              "lang": "en"
+                                              "lang": self.lang
                                             }, headers=headers)
 
     def dump(self):
